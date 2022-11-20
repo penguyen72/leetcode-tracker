@@ -1,5 +1,26 @@
-.problem {
+/* .problem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+} */
+
+.parent {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* 
+.child {
+  background-color: orange;
+  width: 100px;
+  height: 100px;
+} */
+
+.information {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 500px;
+  height: 500px;
 }

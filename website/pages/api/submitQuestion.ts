@@ -15,11 +15,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const url = "https://leetcode.com/problems/3sum/";
+    const data = req.body;
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(url);
+    await page.goto(data.url);
 
     const [questionElement] = await page.$x(
       '//*[@id="app"]/div/div[2]/div[1]/div/div[1]/div/div[1]/div[1]/div/div[2]/div/div[1]/div[1]'
@@ -37,11 +37,11 @@ export default async function handler(
     const title = await questionContent.jsonValue();
     const difficulty = await difficultyContent.jsonValue();
 
-    // const [number, name] = title.split(". ");
+    const [number, name] = title.split(". ");
 
     await browser.close();
 
-    res.status(200).json({ title, difficulty });
+    res.status(200).json({ number, name, difficulty });
   } catch (error) {
     res.status(400).json({ error });
   }
