@@ -17,6 +17,7 @@ const notion = new Client({
 
 const Home: NextPage = () => {
   const [problemLink, setProblemLink] = useState("");
+  const [linkError, setLinkError] = useState(false);
   const [secretKey, setSecretKey] = useState("");
   const [databaseID, setDatabaseID] = useState("");
 
@@ -79,10 +80,17 @@ const Home: NextPage = () => {
   //   });
   // };
 
+  const validateLink = (url: string): boolean => {
+    return /^https:\/\/leetcode.com\/problems\/[a-z\-]+\/$/.test(url);
+  };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    setProblemLink(e.target.problem.value);
-    createPage(problemLink);
+    if (validateLink(problemLink)) {
+      createPage(problemLink);
+    } else {
+      setLinkError(true);
+    }
   };
 
   // useEffect(() => {
@@ -90,7 +98,7 @@ const Home: NextPage = () => {
   // }, [problemLink]);
 
   return (
-    <div className={styles.parent}>
+    <div className={styles.container}>
       <div className={styles.information}>
         <TextField
           id="outlined-basic"
@@ -98,6 +106,9 @@ const Home: NextPage = () => {
           variant="outlined"
           helperText="Insert Leetcode Link"
           fullWidth={true}
+          onChange={(e) => {
+            setProblemLink(e.target.value);
+          }}
         />
         {/* <LoadingButton
         loading
@@ -107,13 +118,15 @@ const Home: NextPage = () => {
       >
         Uploading
       </LoadingButton> */}
-        <Button variant="outlined">Submit</Button>
-        <form onSubmit={handleSubmit}>
+        <Button variant="outlined" onClick={handleSubmit}>
+          Submit
+        </Button>
+        {/* <form onSubmit={handleSubmit}>
           <label>Insert Leetcode Problem Link</label>
           <input type="text" id="problem" name="problem"></input>
           <br />
           <button type="submit">Submit</button>
-        </form>
+        </form> */}
       </div>
     </div>
     // <div>
