@@ -5,10 +5,11 @@
 } */
 
 .container {
-  height: 100vh;
+  width: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: red;
 }
 
 .information {
