@@ -26,6 +26,7 @@ const Home: NextPage = () => {
   const [problemLink, setProblemLink] = useState("");
   const [linkError, setLinkError] = useState(false);
   const [fetchDialog, setFetchDialog] = useState(false);
+  const [obtainInfoError, setObtainInfoError] = useState(false);
   const [secretKey, setSecretKey] = useState("");
   const [databaseID, setDatabaseID] = useState("");
 
@@ -50,24 +51,30 @@ const Home: NextPage = () => {
     });
   };
 
-  const buildData = () => {
+  const buildData = (data: any) => {
     return {
       parent: {
         type: "database_id",
         database_id: process.env.NOTION_DB,
       },
       properties: {
-        Number: {
-          number: 1,
+        "Leetcode Number": {
+          number: data.number,
         },
         "Problem Name": {
           title: [
             {
               text: {
-                content: "Problem Name",
+                content: data.name,
+                link: data.url,
               },
             },
           ],
+        },
+        Difficulty: {
+          select: {
+            name: data.difficulty,
+          },
         },
       },
     };
@@ -86,34 +93,20 @@ const Home: NextPage = () => {
     };
   };
 
-  function createPage(leetcodeURL: string) {
-    fetch("/api/submitQuestion", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url: leetcodeURL }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  // const createPage = () => {
-  //   return new Promise((resolve, reject) => {
-
-  //     fetch("https://api.notion.com/v1/pages", options)
-  //       .then((response) => response.json())
-  //       .then((response) => console.log(response))
-  //       .catch((err) => console.error(err));
-  //   });
-  // };
+  const createPage = (leetcodeURL: string, options: any) => {
+    return new Promise((resolve, reject) => {
+      fetch("https://api.notion.com/v1/pages", options)
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  };
 
   const validateLink = (url: string): boolean => {
     return /^https:\/\/leetcode.com\/problems\/[a-z\-]+\/$/.test(url);
@@ -129,7 +122,7 @@ const Home: NextPage = () => {
           setFetchDialog(false);
         })
         .catch((error) => {
-          console.log(error);
+          setObtainInfoError(true);
           setFetchDialog(false);
         });
     } else {
@@ -139,6 +132,7 @@ const Home: NextPage = () => {
 
   const handleClose = () => {
     setLinkError(false);
+    setObtainInfoError(false);
   };
 
   return (
@@ -159,6 +153,11 @@ const Home: NextPage = () => {
         </Button>
         <Snackbar open={linkError} onClose={handleClose}>
           <Alert severity="error">Please submit a proper link!</Alert>
+        </Snackbar>
+        <Snackbar open={obtainInfoError} onClose={handleClose}>
+          <Alert severity="error">
+            Could not obtain information from Leetcode.com
+          </Alert>
         </Snackbar>
         <Dialog open={fetchDialog}>
           <DialogTitle>Please Wait...</DialogTitle>

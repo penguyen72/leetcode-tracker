@@ -41,7 +41,7 @@ export default async function handler(
 
     await browser.close();
 
-    res.status(200).json({ number, name, difficulty });
+    res.status(200).json({ number, name, difficulty, url: data.url });
   } catch (error) {
     res.status(400).json({ error });
   }
