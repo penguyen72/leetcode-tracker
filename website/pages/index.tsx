@@ -1,13 +1,9 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "../styles/pages/Home.module.css";
 
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import LoadingButton from "@mui/lab/LoadingButton";
-import SaveIcon from "@mui/icons-material/Save";
-import { stepLabelClasses } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -15,7 +11,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { create } from "@mui/material/styles/createTransitions";
 
 const { Client } = require("@notionhq/client");
 
@@ -73,105 +68,6 @@ const Home: NextPage = () => {
     });
   };
 
-  const buildData = (data: any) => {
-    return {
-      parent: {
-        type: "database_id",
-        database_id: process.env.NOTION_DB,
-      },
-      properties: {
-        Number: {
-          number: data.number,
-        },
-        "Problem Name": {
-          title: [
-            {
-              text: {
-                content: data.name,
-                link: data.url,
-              },
-            },
-          ],
-        },
-        Difficulty: {
-          select: {
-            name: data.difficulty,
-          },
-        },
-      },
-    };
-  };
-
-  const buildOptions = (data: any) => {
-    return {
-      method: "POST",
-      headers: {
-        Authorization: process.env.NOTION_SECRET,
-        mode: "no-cors",
-        accept: "application/json",
-        "Notion-Version": "2022-06-28",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(data),
-    };
-  };
-
-  // const createPage = (options: any) => {
-  //   return new Promise((resolve, reject) => {
-  //     fetch("https://api.notion.com/v1/pages", options)
-  //       .then((response) => {
-  //         return response.json();
-  //       })
-  //       .then((response) => {
-  //         resolve(response);
-  //       })
-  //       .catch((error) => {
-  //         reject(error);
-  //       });
-  //   });
-  // };
-
-  // const createPage = () => {
-  //   return new Promise((resolve, reject) => {
-  //     const data = {
-  //       parent: {
-  //         type: "database_id",
-  //         database_id: process.env.NOTION_DB,
-  //       },
-  //       properties: {
-  //         Number: {
-  //           number: 1,
-  //         },
-  //         "Problem Name": {
-  //           title: [
-  //             {
-  //               text: {
-  //                 content: "Problem Name",
-  //               },
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     };
-  //     const options = {
-  //       method: "POST",
-  //       headers: {
-  //         Authorization: process.env.NOTION_SECRET,
-  //         mode: "no-cors",
-  //         accept: "application/json",
-  //         "Notion-Version": "2022-06-28",
-  //         "content-type": "application/json",
-  //       },
-  //       body: JSON.stringify(data),
-  //     };
-
-  //     fetch("https://api.notion.com/v1/pages", options)
-  //       .then((response) => response.json())
-  //       .then((response) => resolve(response))
-  //       .catch((error) => reject(error));
-  //   });
-  // };
-
   const validateLink = (url: string): boolean => {
     return /^https:\/\/leetcode.com\/problems\/[a-z\-]+\/$/.test(url);
   };
@@ -186,8 +82,6 @@ const Home: NextPage = () => {
             setObtainInfoError(true);
             setFetchDialog(false);
           } else {
-            const data = buildData(response);
-            console.log(response);
             createPage(response)
               .then(() => {
                 console.log("success");
@@ -195,13 +89,6 @@ const Home: NextPage = () => {
               .catch(() => {
                 console.log("error");
               });
-            // createPage2(data)
-            //   .then((response) => {
-            //     console.log("success");
-            //   })
-            //   .catch((error) => {
-            //     console.log("error");
-            //   });
             setFetchDialog(false);
           }
         })
@@ -240,7 +127,7 @@ const Home: NextPage = () => {
         </Snackbar>
         <Snackbar open={obtainInfoError} onClose={handleClose}>
           <Alert severity="error">
-            Could not obtain information from Leetcode.com
+            Could not obtain information from Leetcode.com!
           </Alert>
         </Snackbar>
         <Dialog open={fetchDialog}>
