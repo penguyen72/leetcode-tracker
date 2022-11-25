@@ -25,6 +25,8 @@ const Home: NextPage = () => {
   const [linkError, setLinkError] = useState(false);
   const [fetchDialog, setFetchDialog] = useState(false);
   const [obtainInfoError, setObtainInfoError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [notionError, setNotionError] = useState(false);
   const [secretKey, setSecretKey] = useState("");
   const [databaseID, setDatabaseID] = useState("");
 
@@ -80,16 +82,17 @@ const Home: NextPage = () => {
       setFetchDialog(true);
       obtainInformation(problemLink)
         .then((response: any) => {
-          if (response.name === "") {
+          console.log(response);
+          if (response.name === "" || response.error) {
             setObtainInfoError(true);
             setFetchDialog(false);
           } else {
             createPage(response)
               .then(() => {
-                console.log("success");
+                setSuccess(true);
               })
               .catch(() => {
-                console.log("error");
+                setNotionError(true);
               });
             setFetchDialog(false);
           }
@@ -131,6 +134,12 @@ const Home: NextPage = () => {
         <Button variant="outlined" onClick={handleSubmit}>
           Submit
         </Button>
+        <Snackbar open={success} onClose={handleClose}>
+          <Alert severity="success">Success!</Alert>
+        </Snackbar>
+        <Snackbar open={notionError} onClose={handleClose}>
+          <Alert severity="error">There was an issue adding to Notion!</Alert>
+        </Snackbar>
         <Snackbar open={linkError} onClose={handleClose}>
           <Alert severity="error">Please submit a proper link!</Alert>
         </Snackbar>
