@@ -15,6 +15,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { create } from "@mui/material/styles/createTransitions";
 
 const { Client } = require("@notionhq/client");
 
@@ -30,7 +31,7 @@ const Home: NextPage = () => {
   const [secretKey, setSecretKey] = useState("");
   const [databaseID, setDatabaseID] = useState("");
 
-  const obtainInformation = (leetcodeURL: string) => {
+  const obtainInformation = (leetcodeURL: string): any => {
     return new Promise((resolve, reject) => {
       fetch("/api/submitQuestion", {
         method: "POST",
@@ -51,6 +52,27 @@ const Home: NextPage = () => {
     });
   };
 
+  const createPage = (data: any): any => {
+    return new Promise((resolve, reject) => {
+      fetch("/api/submitPage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  };
+
   const buildData = (data: any) => {
     return {
       parent: {
@@ -58,7 +80,7 @@ const Home: NextPage = () => {
         database_id: process.env.NOTION_DB,
       },
       properties: {
-        "Leetcode Number": {
+        Number: {
           number: data.number,
         },
         "Problem Name": {
@@ -84,6 +106,7 @@ const Home: NextPage = () => {
     return {
       method: "POST",
       headers: {
+        Authorization: process.env.NOTION_SECRET,
         mode: "no-cors",
         accept: "application/json",
         "Notion-Version": "2022-06-28",
@@ -93,20 +116,61 @@ const Home: NextPage = () => {
     };
   };
 
-  const createPage = (leetcodeURL: string, options: any) => {
-    return new Promise((resolve, reject) => {
-      fetch("https://api.notion.com/v1/pages", options)
-        .then((response) => {
-          return response.json();
-        })
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
+  // const createPage = (options: any) => {
+  //   return new Promise((resolve, reject) => {
+  //     fetch("https://api.notion.com/v1/pages", options)
+  //       .then((response) => {
+  //         return response.json();
+  //       })
+  //       .then((response) => {
+  //         resolve(response);
+  //       })
+  //       .catch((error) => {
+  //         reject(error);
+  //       });
+  //   });
+  // };
+
+  // const createPage = () => {
+  //   return new Promise((resolve, reject) => {
+  //     const data = {
+  //       parent: {
+  //         type: "database_id",
+  //         database_id: process.env.NOTION_DB,
+  //       },
+  //       properties: {
+  //         Number: {
+  //           number: 1,
+  //         },
+  //         "Problem Name": {
+  //           title: [
+  //             {
+  //               text: {
+  //                 content: "Problem Name",
+  //               },
+  //             },
+  //           ],
+  //         },
+  //       },
+  //     };
+  //     const options = {
+  //       method: "POST",
+  //       headers: {
+  //         Authorization: process.env.NOTION_SECRET,
+  //         mode: "no-cors",
+  //         accept: "application/json",
+  //         "Notion-Version": "2022-06-28",
+  //         "content-type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     };
+
+  //     fetch("https://api.notion.com/v1/pages", options)
+  //       .then((response) => response.json())
+  //       .then((response) => resolve(response))
+  //       .catch((error) => reject(error));
+  //   });
+  // };
 
   const validateLink = (url: string): boolean => {
     return /^https:\/\/leetcode.com\/problems\/[a-z\-]+\/$/.test(url);
@@ -117,11 +181,31 @@ const Home: NextPage = () => {
     if (validateLink(problemLink)) {
       setFetchDialog(true);
       obtainInformation(problemLink)
-        .then((response) => {
-          console.log(response);
-          setFetchDialog(false);
+        .then((response: any) => {
+          if (response.name === "") {
+            setObtainInfoError(true);
+            setFetchDialog(false);
+          } else {
+            const data = buildData(response);
+            console.log(response);
+            createPage(response)
+              .then(() => {
+                console.log("success");
+              })
+              .catch(() => {
+                console.log("error");
+              });
+            // createPage2(data)
+            //   .then((response) => {
+            //     console.log("success");
+            //   })
+            //   .catch((error) => {
+            //     console.log("error");
+            //   });
+            setFetchDialog(false);
+          }
         })
-        .catch((error) => {
+        .catch(() => {
           setObtainInfoError(true);
           setFetchDialog(false);
         });
