@@ -3,18 +3,24 @@ import { useState } from "react";
 import styles from "../styles/pages/Home.module.css";
 
 import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import LoadingDialog from "./components/LoadingDialog";
+import { makeStyles } from "@mui/styles";
+import { Typography } from "@mui/material";
 
-const { Client } = require("@notionhq/client");
-
-const notion = new Client({
-  auth: process.env.NOTION_SECRET,
+const useStyles = makeStyles({
+  field: {
+    marginTop: 10,
+    width: 500,
+  },
 });
 
 const Home: NextPage = () => {
+  const classes = useStyles();
+
   const [problemLink, setProblemLink] = useState("");
   const [linkError, setLinkError] = useState(false);
   const [fetchDialog, setFetchDialog] = useState(false);
@@ -103,14 +109,21 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+    >
       <div className={styles.information}>
+        <Typography variant="h3">Leetcode Tracker</Typography>
         <TextField
           id="outlined-basic"
           label="Leetcode Problem"
           variant="outlined"
           helperText="Insert Leetcode Link"
-          fullWidth={true}
+          className={classes.field}
+          required
           onChange={(e) => {
             setProblemLink(e.target.value);
           }}
@@ -128,20 +141,8 @@ const Home: NextPage = () => {
         </Snackbar>
         <LoadingDialog fetchDialog={fetchDialog} />
       </div>
-    </div>
+    </Box>
   );
 };
-
-export async function getStaticProps() {
-  const response = await notion.databases.query({
-    database_id: process.env.NOTION_DB,
-  });
-
-  return {
-    props: {
-      results: response.results,
-    },
-  };
-}
 
 export default Home;
