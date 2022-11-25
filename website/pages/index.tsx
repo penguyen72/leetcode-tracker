@@ -4,13 +4,9 @@ import styles from "../styles/pages/Home.module.css";
 
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import LoadingDialog from "./components/LoadingDialog";
 
 const { Client } = require("@notionhq/client");
 
@@ -130,20 +126,7 @@ const Home: NextPage = () => {
             Could not obtain information from Leetcode.com!
           </Alert>
         </Snackbar>
-        <Dialog open={fetchDialog}>
-          <DialogTitle>Please Wait...</DialogTitle>
-
-          <CircularProgress />
-          <DialogContentText id="alert-dialog-description">
-            We are currently obtaining information on Leetcode.com
-          </DialogContentText>
-        </Dialog>
-        {/* <form onSubmit={handleSubmit}>
-          <label>Insert Leetcode Problem Link</label>
-          <input type="text" id="problem" name="problem"></input>
-          <br />
-          <button type="submit">Submit</button>
-        </form> */}
+        <LoadingDialog fetchDialog={fetchDialog} />
       </div>
     </div>
   );
