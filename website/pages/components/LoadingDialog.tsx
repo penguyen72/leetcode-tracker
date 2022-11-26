@@ -1,22 +1,18 @@
 import React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import { makeStyles } from "@mui/styles";
 import { Grid, Typography } from "@mui/material";
 
-const useStyles = makeStyles({
+const styles = {
   textPosition: {
     marginTop: 10,
     marginLeft: 20,
   },
-});
+};
 
 const LoadingDialog = ({ fetchDialog }: { fetchDialog: boolean }) => {
-  const classes = useStyles();
-
   return (
     <Dialog open={fetchDialog}>
       <DialogContent>
@@ -24,7 +20,7 @@ const LoadingDialog = ({ fetchDialog }: { fetchDialog: boolean }) => {
           <CircularProgress />
           <DialogContentText
             id="alert-dialog-description"
-            className={classes.textPosition}
+            sx={styles.textPosition}
           >
             <Typography variant="body1">
               Currently obtaining information from Leetcode.com...
