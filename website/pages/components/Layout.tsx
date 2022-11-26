@@ -9,7 +9,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const styles = {
   icon: {
-    marginRight: 5,
+    marginRight: 1,
     color: "#F0F0F0",
   },
   appbar: {
@@ -34,13 +34,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <Typography variant="h6" sx={styles.title}>
             Welcome to Leetcode Tracker
           </Typography>
-          <Button sx={styles.appbar} href="/">
+          <Button sx={styles.button} href="/">
             Home
           </Button>
-          <Button sx={styles.appbar} href="/about">
+          <Button sx={styles.button} href="/about">
             About
           </Button>
-          <Button sx={styles.appbar} href="/leetcode-tracker">
+          <Button sx={styles.button} href="/leetcode-tracker">
             Leetcode Tracker
           </Button>
           <IconButton

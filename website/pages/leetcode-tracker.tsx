@@ -19,7 +19,7 @@ const styles = {
   },
   title: { color: "#EAB03C" },
   field: {
-    marginTop: 10,
+    marginTop: 5,
     width: 500,
   },
   information: {
