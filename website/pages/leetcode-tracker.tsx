@@ -7,10 +7,9 @@ import LoadingDialog from "./components/LoadingDialog";
 import Layout from "./components/Layout";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
 
-const useStyles = makeStyles({
+const styles = {
   screen: {
     display: "flex",
     flexDirection: "column",
@@ -34,7 +33,7 @@ const useStyles = makeStyles({
     borderRadius: 5,
     boxShadow: "0 2px 6px #000",
   },
-});
+};
 
 const LeetcodeTracker: NextPage = () => {
   const [problemLink, setProblemLink] = useState("");
@@ -43,8 +42,6 @@ const LeetcodeTracker: NextPage = () => {
   const [obtainInfoError, setObtainInfoError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [notionError, setNotionError] = useState(false);
-
-  const classes = useStyles();
 
   const obtainInformation = (leetcodeURL: string): any => {
     return new Promise((resolve, reject) => {
@@ -129,9 +126,9 @@ const LeetcodeTracker: NextPage = () => {
 
   return (
     <Layout>
-      <Box className={classes.screen}>
-        <Box className={classes.information}>
-          <Typography variant="h3" className={classes.title}>
+      <Box sx={styles.screen}>
+        <Box sx={styles.information}>
+          <Typography variant="h3" sx={styles.title}>
             Leetcode Tracker
           </Typography>
           <TextField
@@ -139,7 +136,7 @@ const LeetcodeTracker: NextPage = () => {
             label="Leetcode Problem"
             variant="outlined"
             helperText="Insert Leetcode Link"
-            className={classes.field}
+            sx={styles.field}
             fullWidth
             required
             onChange={(e) => {

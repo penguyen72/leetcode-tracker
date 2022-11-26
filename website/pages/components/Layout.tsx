@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import { makeStyles } from "@mui/styles";
 import { Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
-const useStyles = makeStyles({
+const styles = {
   icon: {
     marginRight: 5,
     color: "#F0F0F0",
@@ -24,25 +23,24 @@ const useStyles = makeStyles({
   button: {
     color: "#F0F0F0",
   },
-});
+};
 
 const Layout = ({ children }: { children: ReactNode }) => {
-  const classes = useStyles();
   return (
     <div>
       <AppBar>
-        <Toolbar className={classes.appbar}>
-          <AssessmentIcon className={classes.icon}></AssessmentIcon>
-          <Typography variant="h6" className={classes.title}>
+        <Toolbar sx={styles.appbar}>
+          <AssessmentIcon sx={styles.icon}></AssessmentIcon>
+          <Typography variant="h6" sx={styles.title}>
             Welcome to Leetcode Tracker
           </Typography>
-          <Button className={classes.appbar} href="/">
+          <Button sx={styles.appbar} href="/">
             Home
           </Button>
-          <Button className={classes.appbar} href="/about">
+          <Button sx={styles.appbar} href="/about">
             About
           </Button>
-          <Button className={classes.appbar} href="/leetcode-tracker">
+          <Button sx={styles.appbar} href="/leetcode-tracker">
             Leetcode Tracker
           </Button>
           <IconButton
